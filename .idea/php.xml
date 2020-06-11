@@ -106,6 +106,8 @@
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-searchable" />
       <path value="$PROJECT_DIR$/vendor/intervention/image" />
       <path value="$PROJECT_DIR$/vendor/erusev/parsedown" />
+      <path value="$PROJECT_DIR$/vendor/mews/purifier" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7" />

@@ -8,6 +8,7 @@ use Parsedown;
 class Question extends Model
 {
     //
+    use VotableTrait;
     protected $fillable=['title','body'];
     public function user()
     {
@@ -19,6 +20,13 @@ class Question extends Model
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = str_slug($value);
     }
+
+    //cleaning before saving to database
+
+//    public function setBodyAttribute($value)
+//    {
+//        $this->attributes['body'] = clean($value);
+//    }
 
     public function getUrlAttribute()
     {
@@ -44,12 +52,21 @@ class Question extends Model
 
     public function getBodyHtmlAttribute()
     {
+        return clean($this->bodyHtml());
+    }
+
+    public function getExcerptAttribute()
+    {
+        return str_limit(strip_tags($this->bodyHtml()), 250);
+    }
+
+    private function bodyHtml(){
         return Parsedown::instance()->text($this->body);
     }
 
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class)->orderBy('votes_count', 'DESC');
     }
 
     public function acceptBestAnswer(Answer $answer)
@@ -78,18 +95,4 @@ class Question extends Model
         return $this->favorites->count();
     }
 
-    public function votes()
-    {
-        return $this->morphToMany(User::class, 'votable');
-    }
-
-    public function upVotes()
-    {
-        return $this->votes()->wherePivot('vote', 1);
-    }
-
-    public function downVotes()
-    {
-        return $this->votes()->wherePivot('vote', -1);
-    }
 }
